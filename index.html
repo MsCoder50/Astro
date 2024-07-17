@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solar System Form</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&display=swap">
+    <style>
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-image: linear-gradient(to bottom, #3498db, #2980b9);
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            max-width: 400px;
+            margin: 20px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-control {
+            width: calc(100% - 22px); /* Adjusted width to accommodate borders */
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box; /* Ensure padding is included in width calculation */
+        }
+        
+        .form-control:focus {
+            border-color: #aaa;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn {
+            background-color: #2980b9;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .btn:hover {
+            background-color: #3498db;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Information Form</h1>
+        <form id="infoForm">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="dob">Date of Birth:</label>
+                <input type="date" id="dob" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="place-of-birth">Place of Birth:</label>
+                <input type="text" id="place-of-birth" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="phone-number">Phone Number:</label>
+                <input type="tel" id="phone-number" class="form-control" required>
+            </div>
+            <button type="submit" class="btn">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('infoForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Get form values
+            const name = document.getElementById('name').value;
+            const dob = document.getElementById('dob').value;
+            const placeOfBirth = document.getElementById('place-of-birth').value;
+            const phoneNumber = document.getElementById('phone-number').value;
+
+            // Calculate days from Jan 1, 1665 to DOB
+            const january1_1665 = new Date('1665-01-01');
+            const dobDate = new Date(dob);
+            const daysDifference = Math.floor((dobDate - january1_1665) / (1000 * 60 * 60 * 24));
+
+            // Store data in local storage
+            const formData = {
+                name,
+                dob,
+                placeOfBirth,
+                phoneNumber,
+                daysDifference
+            };
+
+            localStorage.setItem('formData', JSON.stringify(formData));
+
+            // Optionally, display a confirmation or redirect to another page
+            alert('Form submitted successfully!');
+            // Reset form
+            document.location.href = "preview.html"
+        });
+    </script>
+</body>
+</html>

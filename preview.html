@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+  <title>3D Solar System</title>
+  <style>
+    #info-overlay {
+      display: none;
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 300px;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 20px;
+      box-sizing: border-box;
+      z-index: 10;
+    }
+    #exit-button {
+      display: block;
+      margin-top: 20px;
+      padding: 10px;
+      background-color: red;
+      color: white;
+      text-align: center;
+      cursor: pointer;
+    }
+    #toggle-view-button {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      padding: 10px;
+      background-color: blue;
+      color: white;
+      cursor: pointer;
+      z-index: 10;
+    }
+  </style>
+</head>
+<body>
+  <div id="info-overlay">
+    <div id="planet-info"></div>
+    <div id="exit-button">Exit</div>
+  </div>
+  <button id="toggle-view-button">Toggle View</button>
+  <script type="module" src="./js/main.js"></script>
+</body>
+</html>
