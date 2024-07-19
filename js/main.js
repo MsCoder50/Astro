@@ -1,6 +1,7 @@
 import * as THREE from "https://cdn.skypack.dev/three@0.129.0";
 import { OrbitControls } from "https://cdn.skypack.dev/three@0.129.0/examples/jsm/controls/OrbitControls.js";
 
+
 let scene, camera, renderer, controls;
 let planets = [];
 let planetLabels = [];
@@ -106,7 +107,7 @@ function createLabel(planetName) {
 
 function init() {
   scene = new THREE.Scene();
-  camera = new THREE.PerspectiveCamera(32, window.innerWidth / window.innerHeight, 0.1, 1000);
+  camera = new THREE.PerspectiveCamera(25, window.innerWidth / window.innerHeight, 0.1, 1000);
 
   const normalSkyboxPaths = [
     "../img/skybox/space_ft.png",
@@ -162,35 +163,12 @@ function init() {
     scene.add(label);
     planetLabels.push(label);
 
-    // Add a point light to each planet except the Sun
-    if (data.name !== "Sun") {
-      const planetLight = new THREE.PointLight(0xffffff, 1, 50);
-      planetLight.position.copy(planet.position);
-      scene.add(planetLight);
-      planetLights.push(planetLight);
-    }
   });
 
   const sunLight = new THREE.PointLight(0xffffff, 1, 0);
   sunLight.position.copy(planets[0].position);
   scene.add(sunLight);
 
-  // Additional light source from the back side
-  const backLight = new THREE.DirectionalLight(0xffffff, 0.5);
-  backLight.position.set(160, 0, 0).normalize();
-  scene.add(backLight);
-
-  const rightLight = new THREE.DirectionalLight(0xffffff, 0.5);
-  rightLight.position.set(80, -160, 0).normalize();
-  scene.add(rightLight);
-
-  const topLight = new THREE.DirectionalLight(0xffffff, 0.5);
-  topLight.position.set(80, 0, 80).normalize();
-  scene.add(topLight);
-
-  const leftLight = new THREE.DirectionalLight(0xffffff, 0.5);
-  leftLight.position.set(80, 160, 0).normalize();
-  scene.add(leftLight);
 
   // Log the coordinates of each planet
   logPlanetPositions();
@@ -209,11 +187,11 @@ function init() {
   window.addEventListener("resize", onWindowResize, false);
   window.addEventListener("click", onDocumentMouseDown, false);
 
-  // Add event listener for the exit button
-  document.getElementById("exit-button").addEventListener("click", exitPlanetView);
-
   // Add event listener for the toggle view button
   document.getElementById("toggle-view-button").addEventListener("click", toggleView);
+
+  // Add event listener for detecting zoom out
+  controls.addEventListener("change", onZoomChange);
 }
 
 function logPlanetPositions() {
@@ -247,10 +225,7 @@ function animate() {
     label.position.copy(planet.position);
     label.position.y += 10;
 
-    // Update the position of the planet light
-    if (planetLights[index - 1]) {
-      planetLights[index - 1].position.copy(planet.position);
-    }
+
   });
 
   if (zooming) {
@@ -340,18 +315,15 @@ function showPlanetInfo(planetName) {
   infoOverlay.style.display = "block";
 }
 
-function exitPlanetView() {
-  const infoOverlay = document.getElementById("info-overlay");
-  infoOverlay.style.display = "none";
-
-  initialCameraPosition.copy(camera.position);
-  targetCameraPosition.copy(planets[0].position);
-  targetCameraPosition.z += 100; // Adjust the zoom out distance as needed
-  zooming = true;
-  zoomStartTime = Date.now();
-
-  controls.target.copy(planets[0].position);
-  controls.update();
+function onZoomChange() {
+  if (!zooming && selectedPlanet) {
+    const distanceToPlanet = camera.position.distanceTo(selectedPlanet.position);
+    if (distanceToPlanet > selectedPlanet.userData.distance / 2) {
+      // Remove the information overlay if zoomed out beyond a certain distance
+      const infoOverlay = document.getElementById("info-overlay");
+      infoOverlay.style.display = "none";
+    }
+  }
 }
 
 function onWindowResize() {
